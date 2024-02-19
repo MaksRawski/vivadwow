@@ -1,7 +1,8 @@
 # all the project/device specific config is done in scripts/config.tcl
-# make sure the BUILD_DIR here is the same as the one in config.tcl
+# make sure the BUILD_DIR and TOP_MODULE here are the same as the ones in config.tcl
 VIVADO_EXEC := /opt/Xilinx/Vivado/2023.2/bin/vivado
 BUILD_DIR   := build
+TOP_MODULE  := top
 
 # TODO: add sim target which calls iverilog
 
@@ -12,13 +13,13 @@ $(BUILD_DIR)/checkpoints/post_synth.dcp:
 
 synth: $(BUILD_DIR)/checkpoints/post_synth.dcp
 
-$(BUILD_DIR)/top.bit $(BUILD_DIR)/checkpoints/post_impl.dcp: $(BUILD_DIR)/checkpoints/post_synth.dcp
+$(BUILD_DIR)/$(TOP_MODULE).bit $(BUILD_DIR)/checkpoints/post_impl.dcp: $(BUILD_DIR)/checkpoints/post_synth.dcp
 	@mv $(BUILD_DIR)/logs/impl.log $(BUILD_DIR)/logs/impl.backup.log 2> /dev/null || true
 	$(VIVADO_EXEC) $(BUILD_DIR)/checkpoints/post_synth.dcp -mode batch -nojournal -log $(BUILD_DIR)/logs/impl.log -source scripts/impl.tcl
 
 # even though semantically those targets are different they will run the same recipe
 impl: $(BUILD_DIR)/checkpoints/post_impl.dcp
-bit: $(BUILD_DIR)/top.bit
+bit: $(BUILD_DIR)/$(TOP_MODULE).bit
 
 # NOTE: there will be more reports than post_synth_util.rpt
 $(BUILD_DIR)/reports/post_synth_util.rpt: $(BUILD_DIR)/checkpoints/post_synth.dcp
@@ -36,7 +37,11 @@ $(BUILD_DIR)/reports/clock_util.rpt: $(BUILD_DIR)/checkpoints/post_impl.dcp
 reports: $(BUILD_DIR)/reports/post_synth_util.rpt
 	@[ -e "$(BUILD_DIR)/checkpoints/post_impl.dcp" ] && $(MAKE) $(BUILD_DIR)/reports/clock_util.rpt || true
 
-# TODO: add prog target which programs using openFPGALoader
+prog: $(BUILD_DIR)/$(TOP_MODULE).bit
+	openFPGALoader --detect $(BUILD_DIR)/$(TOP_MODULE).bit
+
+burn: $(BUILD_DIR)/$(TOP_MODULE).bit
+	openFPGALoader --detect -f $(BUILD_DIR)/$(TOP_MODULE).bit
 
 clean:
 	rm -rf build .Xil
