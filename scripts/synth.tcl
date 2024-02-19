@@ -1,5 +1,7 @@
 source scripts/config.tcl
-open_project build/$PROJ_NAME.xpr
-reset_run synth_1
-launch_runs synth_1
-wait_on_run synth_1
+
+read_verilog $SRC_FILES
+read_xdc $CONSTRAINT
+
+synth_design -top $TOP_MODULE -part $PART_NAME
+write_checkpoint -force $BUILD_DIR/checkpoints/post_synth.dcp

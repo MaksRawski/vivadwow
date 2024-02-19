@@ -19,7 +19,7 @@ module top (
       .MEMORY_INIT_PARAM("1,2,3,4,5,6,7,8,9,A,B,C,D,E,F"),  // String
       .MEMORY_OPTIMIZATION("true"),  // String
       .MEMORY_PRIMITIVE("auto"),  // String
-      .MEMORY_SIZE(16),  // DECIMAL
+      .MEMORY_SIZE(64),  // DECIMAL; memory array size in bits
       .MESSAGE_CONTROL(0),  // DECIMAL
       .RAM_DECOMP("auto"),  // String
       .READ_DATA_WIDTH_A(4),  // DECIMAL
@@ -37,7 +37,7 @@ module top (
       .addra   (sw),        // ADDR_WIDTH_A-bit input: Address for port A read operations.
       .clka    (clka),      // 1-bit input: Clock signal for port A.
       .ena     (enable),    // 1-bit input: Memory enable signal for port A. Must be high on clock
-      // cycles when read operations are initiated. Pipelined internally.
+                            // cycles when read operations are initiated. Pipelined internally.
 
       .injectdbiterra(injectdbiterra),  // 1-bit input: Do not change from the provided value.
       .injectsbiterra(injectsbiterra),  // 1-bit input: Do not change from the provided value.

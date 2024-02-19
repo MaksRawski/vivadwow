@@ -1,3 +1,11 @@
-set_property STEPS.PHYS_OPT_DESIGN.IS_ENABLED true [get_runs impl_1]
-launch_runs impl_1 -to_step write_bitstream
-wait_on_run impl_1
+source scripts/config.tcl
+
+# place and route
+opt_design
+place_design
+route_design
+
+# uncomment the line below to generate a netlist
+# write_verilog -force $BUILD_DIR/impl_netlist.v -mode timesim -sdf_anno true
+write_bitstream -force $BUILD_DIR/top.bit
+write_checkpoint -force $BUILD_DIR/checkpoints/post_impl.dcp
