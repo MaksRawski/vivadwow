@@ -1,7 +1,8 @@
-set SRC_FILES [glob "src/*.v"]
-# set TB_FILES  [glob "tb/*.v"]
+set SRC_DIR src
 set BUILD_DIR build
+set TOP_MODULE top
 
 set PART_NAME xc7s50csga324-1
 set CONSTRAINT Arty-S7-50.xdc
-set TOP_MODULE top
+
+set SRC_FILES [lsearch -inline -not -glob [glob "$SRC_DIR/*.*"] "$SRC_DIR/*_tb.*"]
