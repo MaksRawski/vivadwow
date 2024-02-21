@@ -39,7 +39,7 @@ $(BUILD_DIR)/$(TOP_MODULE).bit $(BUILD_DIR)/checkpoints/post_impl.dcp: $(BUILD_D
 	@mv $(BUILD_DIR)/logs/impl.log $(BUILD_DIR)/logs/impl.backup.log 2> /dev/null || true
 	$(VIVADO_BIN) $(BUILD_DIR)/checkpoints/post_synth.dcp -mode batch -nojournal -log $(BUILD_DIR)/logs/impl.log -source scripts/impl.tcl
 
-# even though semantically those targets are different they will run the same recipe
+# even though semantically these targets are different they will run the same recipe
 impl: $(BUILD_DIR)/checkpoints/post_impl.dcp
 bit: $(BUILD_DIR)/$(TOP_MODULE).bit
 
